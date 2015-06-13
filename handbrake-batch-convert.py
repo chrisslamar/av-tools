@@ -2,6 +2,8 @@
 import os
 import argparse
 import re
+import sys
+# import signal
 
 
 class VideoFile:
@@ -65,10 +67,16 @@ def getFiles(path_to_file):
 
 def doConversion(queue):
     for item in queue:
-        print('Running...')
-        run_command = handbrake_path + ' -v -Z \'' + preset + '\' -i ' + \
-                      item.video_info['scrubbed_input_directory'] + item.video_info['scrubbed_input_file_name'] + \
-                      ' -o ' + item.video_info['scrubbed_output_directory_path'] + item.video_info['scrubbed_output_file_name']
+        run_command = "{handbrake_path} -v -Z '{preset}'" \
+                      " -i {scrubbed_input_directory}{scrubbed_input_file_name}" \
+                      " -o {scrubbed_output_directory_path}{scrubbed_output_file_name}" \
+                      "".format(handbrake_path=handbrake_path,
+                                preset=preset,
+                                scrubbed_input_directory=item.video_info['scrubbed_input_directory'],
+                                scrubbed_input_file_name=item.video_info['scrubbed_input_file_name'],
+                                scrubbed_output_directory_path=item.video_info['scrubbed_output_directory_path'],
+                                scrubbed_output_file_name=item.video_info['scrubbed_output_file_name']
+                                )
         print(run_command)
         if args.test != True:
             os.system(run_command)
@@ -91,7 +99,3 @@ if args.recursion:
     conversion_queue = buildSourceQueueR(args.source, args.output)
 else:
     conversion_queue = buildSourceQueue(args.source, args.output)
-
-
-doConversion(conversion_queue)
-
