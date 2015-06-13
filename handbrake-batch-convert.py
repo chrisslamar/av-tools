@@ -3,7 +3,8 @@ import os
 import argparse
 import re
 import sys
-# import signal
+import shlex
+import subprocess
 
 
 class VideoFile:
@@ -79,7 +80,13 @@ def doConversion(queue):
                                 )
         print(run_command)
         if args.test != True:
-            os.system(run_command)
+            try:
+                command_list = shlex.split(run_command)
+                print(command_list)
+                subprocess.call(command_list)
+            except KeyboardInterrupt:
+                print 'Interrupted'
+                sys.exit(0)
 
 
 parser = argparse.ArgumentParser(description='HandBrake Conversion Tool!')
@@ -99,3 +106,5 @@ if args.recursion:
     conversion_queue = buildSourceQueueR(args.source, args.output)
 else:
     conversion_queue = buildSourceQueue(args.source, args.output)
+
+doConversion(conversion_queue)
