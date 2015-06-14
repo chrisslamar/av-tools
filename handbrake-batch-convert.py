@@ -94,12 +94,13 @@ parser.add_argument('-s', '--source', help='path to source directory [default: c
 parser.add_argument('-o', '--output', help='path to output directory', required=True)
 parser.add_argument('-t', '--test', help='Run through without actually converting', action='store_true', default=False)
 parser.add_argument('-R', '--recursion', help='recursively select all video files in file tree', action='store_true', default=False)
+parser.add_argument('-p', '--preset', help='HandBrake Preset', default='AppleTV 3')
 args = parser.parse_args()
 
 video_extensions = ('.mkv', '.avi', '.mp4', '.m4v', '.flv', '.mov')
 
 handbrake_path = '/usr/local/bin/HandBrakeCLI'
-preset = 'AppleTV 3'
+preset = args.preset
 default_extension = '.m4v'
 
 if args.recursion:
